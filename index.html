@@ -1,89 +1,119 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora AQL</title>
+    <title>Calculadora de Muestreo ANSI</title>
+    <link rel="shortcut icon" href="https://static.vecteezy.com/system/resources/previews/015/097/267/original/pink-sweet-heart-png.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Calculadora AQL</h1>
-        <form id="aqlForm">
-            <label for="lotSize">Tamaño de lote:</label>
-            <input type="number" id="lotSize" name="lotSize" required>
-            
-            <fieldset>
-                <legend>Seleccione los AQL:</legend>
-                <label><input type="checkbox" name="aql" value="0.065"> AQL 0.065</label>
-                <label><input type="checkbox" name="aql" value="2.5"> AQL 2.5</label>
-                <label><input type="checkbox" name="aql" value="4.0"> AQL 4.0</label>
-            </fieldset>
-            
-            <button type="button" onclick="calculateAQL()">Calcular</button>
-        </form>
-        
-        <div id="results">
-            <h2>Resultados:</h2>
-            <p id="sampleSize"></p>
-            <p id="acceptReject"></p>
-        </div>
-    </div>
 
-    <script>
-        const aqlData = {
-            'A': { '0.065': {sampleSize: 2, accept: 0, reject: 1}, '2.5': {sampleSize: 2, accept: 0, reject: 1}, '4.0': {sampleSize: 2, accept: 0, reject: 1} },
-            'B': { '0.065': {sampleSize: 3, accept: 0, reject: 1}, '2.5': {sampleSize: 3, accept: 0, reject: 1}, '4.0': {sampleSize: 3, accept: 0, reject: 1} },
-            'C': { '0.065': {sampleSize: 5, accept: 0, reject: 1}, '2.5': {sampleSize: 5, accept: 0, reject: 1}, '4.0': {sampleSize: 5, accept: 0, reject: 1} },
-            'D': { '0.065': {sampleSize: 8, accept: 0, reject: 1}, '2.5': {sampleSize: 8, accept: 0, reject: 1}, '4.0': {sampleSize: 8, accept: 1, reject: 2} },
-            'E': { '0.065': {sampleSize: 13, accept: 0, reject: 1}, '2.5': {sampleSize: 13, accept: 1, reject: 2}, '4.0': {sampleSize: 13, accept: 1, reject: 2} },
-            'F': { '0.065': {sampleSize: 20, accept: 0, reject: 1}, '2.5': {sampleSize: 20, accept: 1, reject: 2}, '4.0': {sampleSize: 20, accept: 2, reject: 3} },
-            'G': { '0.065': {sampleSize: 32, accept: 0, reject: 1}, '2.5': {sampleSize: 32, accept: 2, reject: 3}, '4.0': {sampleSize: 32, accept: 3, reject: 4} },
-            'H': { '0.065': {sampleSize: 50, accept: 0, reject: 1}, '2.5': {sampleSize: 50, accept: 3, reject: 4}, '4.0': {sampleSize: 50, accept: 5, reject: 6} },
-            'J': { '0.065': {sampleSize: 80, accept: 0, reject: 1}, '2.5': {sampleSize: 80, accept: 5, reject: 6}, '4.0': {sampleSize: 80, accept: 7, reject: 8} },
-            'K': { '0.065': {sampleSize: 125, accept: 0, reject: 1}, '2.5': {sampleSize: 125, accept: 7, reject: 8}, '4.0': {sampleSize: 125, accept: 10, reject: 11} },
-            'L': { '0.065': {sampleSize: 200, accept: 0, reject: 1}, '2.5': {sampleSize: 200, accept: 10, reject: 11}, '4.0': {sampleSize: 200, accept: 14, reject: 15} },
-            'M': { '0.065': {sampleSize: 315, accept: 0, reject: 1}, '2.5': {sampleSize: 315, accept: 14, reject: 15}, '4.0': {sampleSize: 315, accept: 21, reject: 22} },
-            'N': { '0.065': {sampleSize: 500, accept: 1, reject: 2}, '2.5': {sampleSize: 500, accept: 21, reject: 22}, '4.0': {sampleSize: 500, accept: 21, reject: 22} },
-            'P': { '0.065': {sampleSize: 800, accept: 1, reject: 2}, '2.5': {sampleSize: 800, accept: 21, reject: 22}, '4.0': {sampleSize: 800, accept: 21, reject: 22} },
-            'Q': { '0.065': {sampleSize: 1250, accept: 2, reject: 3}, '2.5': {sampleSize: 1250, accept: 21, reject: 22}, '4.0': {sampleSize: 1250, accept: 21, reject: 22} }
-        };
+<div class="container">
+    <h1>Calculadora de Muestreo ANSI Z1.4</h1>
 
-        function calculateAQL() {
-            const lotSize = parseInt(document.getElementById('lotSize').value);
-            let letter;
-            
-            if (lotSize >= 2 && lotSize <= 8) letter = 'A';
-            else if (lotSize >= 9 && lotSize <= 15) letter = 'B';
-            else if (lotSize >= 16 && lotSize <= 25) letter = 'C';
-            else if (lotSize >= 26 && lotSize <= 50) letter = 'D';
-            else if (lotSize >= 51 && lotSize <= 90) letter = 'E';
-            else if (lotSize >= 91 && lotSize <= 150) letter = 'F';
-            else if (lotSize >= 151 && lotSize <= 280) letter = 'G';
-            else if (lotSize >= 281 && lotSize <= 500) letter = 'H';
-            else if (lotSize >= 501 && lotSize <= 1200) letter = 'J';
-            else if (lotSize >= 1201 && lotSize <= 3200) letter = 'K';
-            else if (lotSize >= 3201 && lotSize <= 10000) letter = 'L';
-            else if (lotSize >= 10001 && lotSize <= 35000) letter = 'M';
-            else if (lotSize >= 35001 && lotSize <= 150000) letter = 'N';
-            else if (lotSize >= 150001 && lotSize <= 500000) letter = 'P';
-            else if (lotSize > 500000) letter = 'Q';
-            else {
-                alert('Tamaño de lote fuera de rango.');
-                return;
-            }
-            
-            const selectedAQLs = Array.from(document.querySelectorAll('input[name="aql"]:checked')).map(el => el.value);
-            const results = [];
+    <form id="sampleForm">
+        <label for="lotSize">Tamaño del lote:</label>
+        <input type="number" id="lotSize" min="1" required>
 
-            selectedAQLs.forEach(aql => {
-                const {sampleSize, accept, reject} = aqlData[letter][aql];
-                results.push(`AQL ${aql}: Tamaño de la muestra = ${sampleSize}, Aceptar = ${accept}, Rechazar = ${reject}`);
-            });
+        <fieldset>
+            <legend>Selecciona los AQL que deseas evaluar</legend>
+            <label><input type="checkbox" name="aql" value="0.065"> Crítico (0.065)</label>
+            <label><input type="checkbox" name="aql" value="2.5"> Mayor (2.5)</label>
+            <label><input type="checkbox" name="aql" value="4.0"> Menor (4.0)</label>
+        </fieldset>
 
-            document.getElementById('sampleSize').textContent = `Tamaño de la muestra: ${aqlData[letter][selectedAQLs[0]].sampleSize}`;
-            document.getElementById('acceptReject').innerHTML = results.join('<br>');
+        <button type="button" onclick="calcularMuestreo()">Calcular</button>
+    </form>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    const tablaDatos = {
+        A: { muestra: 2, datos: { "0.065": [0,1], "2.5": [0,1], "4.0": [0,1] } },
+        B: { muestra: 3, datos: { "0.065": [0,1], "2.5": [0,1], "4.0": [0,1] } },
+        C: { muestra: 5, datos: { "0.065": [0,1], "2.5": [0,1], "4.0": [0,1] } },
+        D: { muestra: 8, datos: { "0.065": [0,1], "2.5": [0,1], "4.0": [1,2] } },
+        E: { muestra: 13, datos: { "0.065": [0,1], "2.5": [1,2], "4.0": [1,2] } },
+        F: { muestra: 20, datos: { "0.065": [0,1], "2.5": [1,2], "4.0": [2,3] } },
+        G: { muestra: 32, datos: { "0.065": [0,1], "2.5": [2,3], "4.0": [3,4] } },
+        H: { muestra: 50, datos: { "0.065": [0,1], "2.5": [3,4], "4.0": [5,6] } },
+        J: { muestra: 80, datos: { "0.065": [0,1], "2.5": [5,6], "4.0": [7,8] } },
+        K: { muestra: 125, datos: { "0.065": [0,1], "2.5": [7,8], "4.0": [10,11] } },
+        L: { muestra: 200, datos: { "0.065": [0,1], "2.5": [10,11], "4.0": [14,15] } },
+        M: { muestra: 315, datos: { "0.065": [0,1], "2.5": [14,15], "4.0": [21,22] } },
+        N: { muestra: 500, datos: { "0.065": [1,2], "2.5": [21,22], "4.0": [21,22] } },
+        P: { muestra: 800, datos: { "0.065": [1,2], "2.5": [21,22], "4.0": [21,22] } },
+        Q: { muestra: 1250, datos: { "0.065": [2,3], "2.5": [21,22], "4.0": [21,22] } }
+    };
+
+    function calcularMuestreo() {
+        const lotSize = parseInt(document.getElementById('lotSize').value);
+        const aqlSeleccionados = Array.from(document.querySelectorAll('input[name="aql"]:checked')).map(el => el.value);
+
+        if (isNaN(lotSize) || lotSize <= 0) {
+            alert('Por favor ingresa un tamaño de lote válido.');
+            return;
         }
-    </script>
+        if (aqlSeleccionados.length === 0) {
+            alert('Selecciona al menos un tipo de AQL.');
+            return;
+        }
+
+        // Determinar letra de código según el tamaño del lote
+        let letra = '';
+        if (lotSize <= 8) letra = 'A';
+        else if (lotSize <= 15) letra = 'B';
+        else if (lotSize <= 25) letra = 'C';
+        else if (lotSize <= 50) letra = 'D';
+        else if (lotSize <= 90) letra = 'E';
+        else if (lotSize <= 150) letra = 'F';
+        else if (lotSize <= 280) letra = 'G';
+        else if (lotSize <= 500) letra = 'H';
+        else if (lotSize <= 1200) letra = 'J';
+        else if (lotSize <= 3200) letra = 'K';
+        else if (lotSize <= 10000) letra = 'L';
+        else if (lotSize <= 35000) letra = 'M';
+        else if (lotSize <= 150000) letra = 'N';
+        else if (lotSize <= 500000) letra = 'P';
+        else letra = 'Q';
+
+        const muestra = tablaDatos[letra].muestra;
+
+        // Crear tabla
+        let html = `
+            <div class="result-card fade-in">
+                <h2>Resultados de inspección</h2>
+                <div class="info">
+                    <p><strong>Letra de código:</strong> ${letra}</p>
+                    <p><strong>Tamaño de muestra:</strong> ${muestra}</p>
+                </div>
+                <table class="results-table">
+                    <tr>
+                        <th>Tipo de defecto (AQL)</th>
+                        <th>Aceptar</th>
+                        <th>Rechazar</th>
+                    </tr>
+        `;
+
+        aqlSeleccionados.forEach(aql => {
+            const [aceptar, rechazar] = tablaDatos[letra].datos[aql];
+            let tipo = aql === "0.065" ? "Crítico" : (aql === "2.5" ? "Mayor" : "Menor");
+
+            html += `
+                <tr>
+                    <td>${tipo} (${aql})</td>
+                    <td>${aceptar}</td>
+                    <td>${rechazar}</td>
+                </tr>
+            `;
+        });
+
+        html += `</table></div>`;
+        document.getElementById("results").innerHTML = html;
+    }
+</script>
+
 </body>
 </html>
